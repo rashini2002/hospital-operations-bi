@@ -6,6 +6,34 @@ The project demonstrates an end-to-end **Raw → Staging → Analytics → BI** 
 
 ---
 
+## 📊 Final Dashboard
+
+![Hospital Operations Dashboard](docs/dashboard.png)
+
+
+### Dashboard Highlights
+
+| KPI                    | Value        |
+| ---------------------- | ------------ |
+| Total Visits           | 5,000        |
+| Total Treatment Cost   | $274,577,359 |
+| Avg Length of Stay     | 4 days       |
+| Avg Recovery Score     | 74.7         |
+| Avg Readmission Risk   | 28.10%       |
+| Emergency Visits       | 1,568        |
+
+The dashboard contains:
+
+* **KPI cards** — visits, treatment cost, length of stay, recovery score, readmission risk, emergency visits
+* **Visits by Department** — Orthopedics leads with 1,058 visits
+* **Dept – Treatment Cost** — Orthopedics is the most expensive at $58.1M
+* **Region – Patient Volume** — visits split across East, West, North, and South
+* **Trend – Monthly Visits** — monthly patient volume across 2022
+* **Readmission Risk Analysis** — visits by Low / Medium / High risk category
+* **Treatment Type Analysis** — Observation, Surgery, Medication, and Therapy
+
+---
+
 ## 📌 Project Overview
 
 The Hospital Operations BI project analyzes patient visits, treatment costs, length of stay, recovery scores, readmission risk, departments, and regional performance.
@@ -89,7 +117,7 @@ The goal is to build a reliable data pipeline that takes raw healthcare data and
 
 ### Business Intelligence
 
-* Tableau
+* Tableau Public
 
 ### Development Tools
 
@@ -107,9 +135,10 @@ hospital-operations-bi/
 ├── data/
 │   ├── raw/
 │   │   └── healthcare_patient_analytics_seaborn.csv
-│   └── .DS_Store
+│   └── processed/              # BI view exports used by Tableau
 │
 ├── docs/
+│   └── dashboard.png           # Final dashboard screenshot
 │
 ├── script/
 │   └── profile_data.py
@@ -328,7 +357,7 @@ Current row count:
 
 # 🔄 ETL Pipeline
 
-The project currently follows these steps:
+The project follows these steps:
 
 ### Step 1 — Extract
 
@@ -389,13 +418,15 @@ dbo.fact_patient
 5,000 rows
 ```
 
+### Step 6 — Create BI Views and Export for Tableau
+
+SQL views are created on top of the star schema and exported as CSV files, which Tableau Public uses as its data source (Tableau Public cannot connect directly to SQL Server).
+
 ---
 
 # 📈 BI Views
 
-SQL views are being created to provide Tableau-ready datasets.
-
-The planned BI views are:
+SQL views provide Tableau-ready datasets:
 
 ```text
 vw_hospital_overview
@@ -406,7 +437,7 @@ vw_monthly_trend
 vw_readmission_risk
 ```
 
-These views will provide business-level metrics such as:
+These views provide business-level metrics such as:
 
 * Total visits
 * Unique patients
@@ -421,6 +452,14 @@ These views will provide business-level metrics such as:
 * Treatment performance
 * Monthly trends
 * Readmission-risk categories
+
+### Readmission Risk Categories
+
+```text
+Low       → < 0.20
+Medium    → 0.20 – < 0.50
+High      → ≥ 0.50
+```
 
 ---
 
@@ -583,75 +622,28 @@ docker exec -i hospital_sqlserver /opt/mssql-tools18/bin/sqlcmd \
 
 ---
 
-# 📊 Planned Tableau Dashboard
+# 📌 Project Status
 
-The final Tableau dashboard will focus on hospital operational performance.
-
-### Executive KPI Cards
-
-* Total Patient Visits
-* Total Treatment Cost
-* Average Treatment Cost
-* Average Length of Stay
-* Average Recovery Score
-* Average Readmission Risk
-
-### Department Analysis
-
-* Patient volume by department
-* Treatment cost by department
-* Average length of stay
-* Recovery score
-* Emergency visit volume
-
-### Regional Analysis
-
-* Patient volume by region
-* Treatment cost by region
-* Recovery performance
-* Readmission risk
-
-### Time Analysis
-
-* Monthly patient visits
-* Monthly treatment cost
-* Monthly average length of stay
-* Monthly recovery score
-
-### Readmission Risk
-
-Risk categories:
-
-```text
-Low       → < 0.20
-Medium    → 0.20 – < 0.50
-High      → ≥ 0.50
-```
-
----
-
-# 📌 Current Project Status
-
-| Component             | Status         |
-| --------------------- | -------------- |
-| Dataset               | ✅              |
-| Docker SQL Server     | ✅              |
-| Database              | ✅              |
-| Raw table             | ✅              |
-| Raw data ingestion    | ✅              |
-| Data profiling script | ✅              |
-| Staging table         | ✅              |
-| Staging data          | ✅              |
-| Star schema           | ✅              |
-| Date dimension        | ✅              |
-| Department dimension  | ✅              |
-| Location dimension    | ✅              |
-| Fact table            | ✅              |
-| Fact validation       | ✅              |
-| BI views              | 🔄 In progress |
-| Tableau connection    | ⏳              |
-| Tableau dashboard     | ⏳              |
-| Documentation         | 🔄             |
+| Component             | Status |
+| --------------------- | ------ |
+| Dataset               | ✅      |
+| Docker SQL Server     | ✅      |
+| Database              | ✅      |
+| Raw table             | ✅      |
+| Raw data ingestion    | ✅      |
+| Data profiling script | ✅      |
+| Staging table         | ✅      |
+| Staging data          | ✅      |
+| Star schema           | ✅      |
+| Date dimension        | ✅      |
+| Department dimension  | ✅      |
+| Location dimension    | ✅      |
+| Fact table            | ✅      |
+| Fact validation       | ✅      |
+| BI views              | ✅      |
+| Tableau connection    | ✅      |
+| Tableau dashboard     | ✅      |
+| Documentation         | ✅      |
 
 ---
 
@@ -664,7 +656,7 @@ Potential future enhancements include:
 * Incremental data loading
 * SQL Server indexes
 * Additional analytical views
-* Tableau dashboard development
+* Dashboard filters (region, department, treatment type, date range)
 * Automated data refresh
 * KPI alerts
 * Advanced readmission-risk analysis

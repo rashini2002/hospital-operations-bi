@@ -1,4 +1,4 @@
 .env
 *.csv
 *.bak
-.DS_Store
+.DS_Store*.hyper
